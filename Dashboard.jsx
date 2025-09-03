@@ -1,26 +1,80 @@
-import React from 'react'
-import EmailChain from './EmailChain'
-import ESPTypeBadge from './ESPTypeBadge'
+import React, { useState } from "react";
 
-export default function Dashboard() {
-  const sampleEmails = [
-    { id: 1, from: "gmail.com", to: "yahoo.com", timestamp: "2025-09-01 10:00", esp: "Gmail" },
-    { id: 2, from: "yahoo.com", to: "outlook.com", timestamp: "2025-09-01 10:02", esp: "Yahoo" },
-    { id: 3, from: "outlook.com", to: "zoho.com", timestamp: "2025-09-01 10:05", esp: "Outlook" },
-  ]
+function Dashboard() {
+  const [headers, setHeaders] = useState("");
+  const [chain, setChain] = useState([]);
+  const [esp, setEsp] = useState("");
+
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+
+    try {
+      const res = await fetch("https://your-backend.onrender.com/process-email", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ headers }),
+      });
+
+      const data = await res.json();
+      setChain(data.chain);
+      setEsp(data.esp);
+    } catch (err) {
+      console.error("Error processing email:", err);
+    }
+  };
 
   return (
-    <div className="bg-white shadow rounded-lg p-6">
-      <h2 className="text-xl font-semibold mb-4">Email Receiving Chain</h2>
-      <EmailChain emails={sampleEmails} />
-      <div className="mt-6">
-        <h3 className="text-lg font-semibold">ESP Types</h3>
-        <div className="flex gap-2 mt-2">
-          {sampleEmails.map(email => (
-            <ESPTypeBadge key={email.id} esp={email.esp} />
-          ))}
+    <div className="p-6 max-w-3xl mx-auto">
+      <h1 className="text-2xl font-bold mb-4">Email Flow Dashboard</h1>
+
+      {/* Input form */}
+      <form onSubmit={handleSubmit} className="mb-6">
+        <textarea
+          className="w-full p-3 border rounded mb-3"
+          rows="6"
+          placeholder="Paste email headers here..."
+          value={headers}
+          onChange={(e) => setHeaders(e.target.value)}
+        />
+        <button
+          type="submit"
+          className="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700"
+        >
+          Process Email
+        </button>
+      </form>
+
+      {/* ESP type */}
+      {esp && (
+        <div className="mb-4">
+          <span className="font-semibold">Detected ESP:</span>{" "}
+          <span className="px-2 py-1 bg-green-100 text-green-700 rounded">
+            {esp}
+          </span>
         </div>
-      </div>
+      )}
+
+      {/* Chain display */}
+      {chain.length > 0 && (
+        <div>
+          <h2 className="text-lg font-semibold mb-2">Receiving Chain:</h2>
+          <ul className="space-y-2">
+            {chain.map((hop, idx) => (
+              <li
+                key={idx}
+                className="p-3 border rounded shadow-sm bg-gray-50"
+              >
+                <span className="font-semibold">Hop {hop.hop}:</span>{" "}
+                {hop.detail}
+                <br />
+                <small className="text-gray-500">{hop.timestamp}</small>
+              </li>
+            ))}
+          </ul>
+        </div>
+      )}
     </div>
-  )
+  );
 }
+
+export default Dashboard;
