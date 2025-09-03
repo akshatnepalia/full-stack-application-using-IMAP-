@@ -23,3 +23,12 @@ This project is part of the **LucidGrowth Software Development Engineer Assignme
 ---
 
 ## 📂 Project Structure
+src/
+├── App.jsx
+├── main.jsx
+├── index.css
+├── components/
+│ ├── Dashboard.jsx
+│ ├── Header.jsx
+│ ├── EmailChain.jsx
+│ └── ESPTypeBadge.jsx
