@@ -27,7 +27,3 @@ It is built as part of the **LucidGrowth Software Development Engineer Assignmen
 - MongoDB Atlas (Mongoose)
 - TypeScript
 - Render (deployment)
-
-
-│ ├── tsconfig.json # TypeScript configuration
-│ └── package.json
