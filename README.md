@@ -2,6 +2,7 @@
 
 **Email Flow Vista** is a full-stack project that visualizes **email receiving chains** from raw headers and detects the **Email Service Provider (ESP)** type.  
 It is built as part of the **LucidGrowth Software Development Engineer Assignment**.
+link to visit my project->https://email-flow-vista.vercel.app/
 
 ---
 
